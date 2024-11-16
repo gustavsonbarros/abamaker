@@ -18,7 +18,7 @@
 </head>
 <body>
 
-    <div class="d-flex">
+    <div class="d-flex flex-column flex-md-row">
         <!-- Barra lateral (Sidebar) -->
         <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar p-3">
             <div class="position-sticky">
@@ -67,7 +67,11 @@
                 <h2>Avaliação de Projetos</h2>
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="d-flex justify-content-between">
+                            <!-- Campo de Pesquisa -->
+                            <input type="text" id="searchProjeto" class="form-control w-50" placeholder="Pesquisar Projeto">
+                        </div>
+                        <div class="table-responsive mt-3">
                             <table class="table table-bordered table-hover">
                                 <thead class="table-dark">
                                     <tr>
@@ -78,7 +82,7 @@
                                         <th>Ação</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tabelaProjetos">
                                     {% for projeto in projetos %}
                                     <tr>
                                         <th>{{ projeto.id }}</th>
@@ -91,8 +95,8 @@
                                         </td>
                                         <td>
                                             {% if projeto.status == 'Pendente' %}
-                                            <a href="{{ url_for('aprovar_projeto', id=projeto.id) }}" class="btn btn-success btn-sm" aria-label="Aprovar Projeto {{ projeto.nome }}">Aprovar</a>
-                                            <a href="{{ url_for('rejeitar_projeto', id=projeto.id) }}" class="btn btn-danger btn-sm" aria-label="Rejeitar Projeto {{ projeto.nome }}">Rejeitar</a>
+                                            <a href="{{ url_for('aprovar_projeto', id=projeto.id) }}" class="btn btn-success btn-sm">Aprovar</a>
+                                            <a href="{{ url_for('rejeitar_projeto', id=projeto.id) }}" class="btn btn-danger btn-sm">Rejeitar</a>
                                             {% else %}
                                             <span class="text-muted">Nenhuma ação disponível</span>
                                             {% endif %}
@@ -101,6 +105,15 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            <!-- Paginação -->
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Próxima</a></li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -111,7 +124,11 @@
                 <h2>Gestão de Instituições</h2>
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="d-flex justify-content-between">
+                            <!-- Campo de Pesquisa -->
+                            <input type="text" id="searchInstituicao" class="form-control w-50" placeholder="Pesquisar Instituição">
+                        </div>
+                        <div class="table-responsive mt-3">
                             <table class="table table-bordered table-hover">
                                 <thead class="table-dark">
                                     <tr>
@@ -121,7 +138,7 @@
                                         <th>Ação</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tabelaInstituicoes">
                                     {% for instituicao in instituicoes %}
                                     <tr>
                                         <th>{{ instituicao.id }}</th>
@@ -133,15 +150,24 @@
                                         </td>
                                         <td>
                                             {% if instituicao.status == 'Aprovada' %}
-                                            <a href="{{ url_for('suspender_instituicao', id=instituicao.id) }}" class="btn btn-warning btn-sm" aria-label="Suspender Instituição {{ instituicao.nome }}">Suspender</a>
+                                            <a href="{{ url_for('suspender_instituicao', id=instituicao.id) }}" class="btn btn-warning btn-sm">Suspender</a>
                                             {% else %}
-                                            <a href="{{ url_for('reativar_instituicao', id=instituicao.id) }}" class="btn btn-success btn-sm" aria-label="Reativar Instituição {{ instituicao.nome }}">Reativar</a>
+                                            <a href="{{ url_for('reativar_instituicao', id=instituicao.id) }}" class="btn btn-success btn-sm">Reativar</a>
                                             {% endif %}
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            <!-- Paginação -->
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Próxima</a></li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -151,5 +177,35 @@
 
     <!-- Scripts do Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script de Busca -->
+    <script>
+        // Função de filtro para a busca de projetos
+        document.getElementById('searchProjeto').addEventListener('input', function() {
+            var filter = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#tabelaProjetos tr');
+            rows.forEach(function(row) {
+                var cells = row.getElementsByTagName('td');
+                if (cells[1].textContent.toLowerCase().indexOf(filter) > -1 || cells[2].textContent.toLowerCase().indexOf(filter) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Função de filtro para a busca de instituições
+        document.getElementById('searchInstituicao').addEventListener('input', function() {
+            var filter = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#tabelaInstituicoes tr');
+            rows.forEach(function(row) {
+                var cells = row.getElementsByTagName('td');
+                if (cells[1].textContent.toLowerCase().indexOf(filter) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

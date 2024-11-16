@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
 # Configuração da aplicação
 app = Flask(__name__)
@@ -75,6 +77,10 @@ def criar_tabelas_e_inserir_dados():
         db.session.add_all(instituicoes)
 
     db.session.commit()
+
+@app.route('/editar_perfil')
+def editar_perfil():
+    return render_template('editar_perfil.html')
 
 # Rotas e funcionalidades
 @app.route('/')
@@ -152,10 +158,32 @@ def reativar_instituicao(id):
     # Lógica para reativar a instituição
     return redirect(url_for('admin_panel')) # ou outra ação apropriada
 
-@app.route('/upload', methods=['GET', 'POST'])
+# Função auxiliar para verificar tipos de arquivo permitidos
+def allowed_file(filename):
+    allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
+
+# Rota para upload de arquivos
+@app.route('/upload', methods=['POST'])
 def upload():
-    # Lógica para processar o upload de arquivo
-    return render_template('upload.html')
+    if 'file' not in request.files:
+        flash('Nenhum arquivo selecionado', 'danger')
+        return redirect(request.url)
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        flash('Nenhum arquivo selecionado', 'danger')
+        return redirect(request.url)
+    
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        flash('Arquivo enviado com sucesso', 'success')
+        return redirect(url_for('index'))
+    
+    flash('Tipo de arquivo não permitido', 'danger')
+    return redirect(request.url)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -177,12 +205,37 @@ def logout():
     flash("Você foi desconectado com sucesso.", "info")
     return redirect(url_for('login'))
 
+# Lista para armazenar informações dos arquivos
+arquivos = []
+
+@app.route('/alunohtml', methods=['GET', 'POST'])
+def alunohtml():
+    if request.method == 'POST':
+        # Verificar se o arquivo foi enviado
+        if 'file' not in request.files:
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            # Salvar o arquivo com nome seguro
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            
+            # Adicionar informações do arquivo à lista
+            data_envio = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            arquivos.append({'nome': filename, 'data': data_envio})
+            return redirect(url_for('alunohtml'))
+
+    return render_template('alunohtml.html', arquivos=arquivos)
+
 @app.route('/aluno')
 def aluno():
     if 'user_id' not in session or session.get('tipo') != 'aluno':
         flash("Acesso negado. Faça login como aluno.", "danger")
         return redirect(url_for('login'))
     return render_template('aluno.html')
+
 
 
 
