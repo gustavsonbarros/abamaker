@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Painel Administrativo para Gestão de Projetos e Instituições">
+    <title>Painel Administrativo</title>
+    
+    <!-- Link do Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Link dos ícones do Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Link para o CSS personalizado -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
+    <!-- Pré-carregamento de favicon -->
+    <link rel="icon" href="/path-to-your-favicon.ico" type="image/x-icon">
+</head>
+<body>
+
+    <div class="d-flex">
+        <!-- Barra lateral (Sidebar) -->
+        <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar p-3">
+            <div class="position-sticky">
+                <header>
+                    <h2 class="h4">Painel Administrativo</h2>
+                    <a href="/" class="btn btn-link">Voltar para a Tela Inicial</a>
+                    <a href="{{ url_for('logout') }}" class="btn btn-link">Sair</a>
+                </header>
+
+                <!-- Navegação Sidebar -->
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#avaliacao-conteudo">
+                            <i class="bi bi-file-earmark-check"></i> Avaliação de Projetos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#gestao-instituicoes">
+                            <i class="bi bi-building"></i> Gestão de Instituições
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+            <header>
+                <h1 class="my-4">Painel Administrativo</h1>
+            </header>
+
+            <!-- Mensagens Flash -->
+            <div class="container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Avaliação de Projetos -->
+            <section id="avaliacao-conteudo" class="mt-5">
+                <h2>Avaliação de Projetos</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nome do Projeto</th>
+                                        <th>Data de Submissão</th>
+                                        <th>Status</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for projeto in projetos %}
+                                    <tr>
+                                        <th>{{ projeto.id }}</th>
+                                        <td>{{ projeto.nome }}</td>
+                                        <td>{{ projeto.data_submissao }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'warning' if projeto.status == 'Pendente' else 'success' }}">
+                                                {{ projeto.status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if projeto.status == 'Pendente' %}
+                                            <a href="{{ url_for('aprovar_projeto', id=projeto.id) }}" class="btn btn-success btn-sm" aria-label="Aprovar Projeto {{ projeto.nome }}">Aprovar</a>
+                                            <a href="{{ url_for('rejeitar_projeto', id=projeto.id) }}" class="btn btn-danger btn-sm" aria-label="Rejeitar Projeto {{ projeto.nome }}">Rejeitar</a>
+                                            {% else %}
+                                            <span class="text-muted">Nenhuma ação disponível</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Gestão de Instituições -->
+            <section id="gestao-instituicoes" class="mt-5">
+                <h2>Gestão de Instituições</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Instituição</th>
+                                        <th>Status</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for instituicao in instituicoes %}
+                                    <tr>
+                                        <th>{{ instituicao.id }}</th>
+                                        <td>{{ instituicao.nome }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if instituicao.status == 'Aprovada' else 'danger' }}">
+                                                {{ instituicao.status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if instituicao.status == 'Aprovada' %}
+                                            <a href="{{ url_for('suspender_instituicao', id=instituicao.id) }}" class="btn btn-warning btn-sm" aria-label="Suspender Instituição {{ instituicao.nome }}">Suspender</a>
+                                            {% else %}
+                                            <a href="{{ url_for('reativar_instituicao', id=instituicao.id) }}" class="btn btn-success btn-sm" aria-label="Reativar Instituição {{ instituicao.nome }}">Reativar</a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+/* =======================================
+   RESET E ESTILIZAÇÃO GLOBAL
+======================================== */
+
+/* Reset de margens e padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Definir fonte global */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =======================================
+   NAVEGAÇÃO
+======================================== */
+.navbar {
+    background-color: #0073e6;
+}
+
+.navbar-brand, .nav-link {
+    color: #fff !important;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+
+/* =======================================
+   JUMBOTRON
+======================================== */
+.jumbotron {
+    background-color: #005bb5;
+    color: white;
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.jumbotron h1, .jumbotron p {
+    font-weight: 500;
+}
+
+.jumbotron:hover {
+    background-color: #004494; /* Mudança sutil ao passar o mouse */
+}
+
+/* =======================================
+   CARROSSEL
+======================================== */
+.carousel-item img {
+    border-radius: 10px;
+}
+
+/* =======================================
+   CARD
+======================================== */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* =======================================
+   BOTÕES
+======================================== */
+.btn-outline-primary, .btn-outline-secondary {
+    border-radius: 20px;
+    padding: 10px 20px;
+    border: 2px solid #0073e6;
+    background-color: transparent;
+    color: #0073e6;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover, .btn-outline-secondary:hover {
+    background-color: #0073e6;
+    color: white;
+    border-color: #0073e6;
+}
+
+/* =======================================
+   RODAPÉ
+======================================== */
+footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e1e1e1;
+    padding: 30px 0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+footer a {
+    color: #0073e6;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* =======================================
+   RESPONSIVIDADE
+======================================== */
+@media (max-width: 768px) {
+    .navbar-nav {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .carousel-inner {
+        margin-top: 1rem;
+    }
+
+    .card {
+        margin-bottom: 1.5rem;
+        border-radius: 12px; /* Tornando os cards mais arredondados */
+    }
+
+    .jumbotron {
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+    
+    .container-register {
+        max-width: 90%; /* Ajusta o tamanho do formulário no mobile */
+    }
+
+    footer {
+        font-size: 0.9rem;
+    }
+}
+
+/* =======================================
+   ESTILOS GERAIS PARA O CONTEÚDO
+======================================== */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container-register {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Estilo do card de registro */
+.card-register {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+    padding: 30px;
+}
+
+/* Flash message */
+.flash-message {
+    display: none;
+    animation: slideIn 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Centralizar o conteúdo dentro do container */
+.text-center {
+    text-align: center;
+}
+
+/* =======================================
+   STYLE.CSS ADICIONAL
+======================================== */
+body {
+    background-color: #f4f7f6; /* Cor de fundo suave */
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para o card */
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+h2 {
+    font-weight: 500;
+}
+
+.card-img-top {
+    width: 100%;
+    height: auto;
+}
