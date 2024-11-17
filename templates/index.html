@@ -35,7 +35,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Início</a></li>
-                <li class="nav-item"><a class="nav-link" href="#projetos">Projetos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('projetos') }}">Projetos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#feedback">Feedback</a></li>
                 <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
                 <li class="nav-item"><a class="nav-link btn btn-outline-primary" href="{{ url_for('register') }}">Cadastrar</a></li>
@@ -48,7 +48,7 @@
     <header class="jumbotron text-center mt-4" id="home">
         <h1 class="display-4">Bem-vindo ao ABA - Maker</h1>
         <p class="lead">Plataforma para conectar projetos educacionais.</p>
-        <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg mt-3">Explore e Crie</a>
+        <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg mt-3">Cadastre-se</a>
     </header>
 
     <!-- Carrossel de Projetos em Destaque -->

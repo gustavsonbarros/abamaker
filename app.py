@@ -206,7 +206,7 @@ def login():
             session['tipo'] = usuario.tipo
             
             # Mensagem de boas-vindas personalizada
-            flash(f"Bem-vindo(a) de volta, {usuario.nome}!", "success")
+            flash(f"Bem-vindo(a) {usuario.nome}!", "success")
             
             # Redirecionamento baseado no tipo de usuário
             if usuario.tipo == 'admin':
@@ -247,6 +247,13 @@ def alunohtml():
 
     return render_template('alunohtml.html', arquivos=arquivos)
 
+@app.route('/projetos', methods=['GET'])
+def projetos():
+    projetos = Projeto.query.all()  # Obter todos os projetos do banco de dados
+    return render_template('projetos.html', projetos=projetos)
+
+
+
 @app.route('/aluno')
 def aluno():
     if 'user_id' not in session or session.get('tipo') != 'aluno':
@@ -254,10 +261,11 @@ def aluno():
         return redirect(url_for('login'))
     return render_template('aluno.html')
 
-@app.route('/projeto/<int:id>', methods=['GET'])
+@app.route('/projeto/<int:id>')
 def detalhes_projeto(id):
-    # Lógica do projeto
-    return render_template('detalhes_projeto.html', id=id)
+    projeto = Projeto.query.get(id)  # Aqui você pega o projeto com o ID
+    return render_template('detalhes_projeto.html', projeto=projeto)
+
 
 
 
