@@ -236,6 +236,11 @@ def aluno():
         return redirect(url_for('login'))
     return render_template('aluno.html')
 
+@app.route('/projeto/<int:id>', methods=['GET'])
+def detalhes_projeto(id):
+    # Lógica do projeto
+    return render_template('detalhes_projeto.html', id=id)
+
 
 
 

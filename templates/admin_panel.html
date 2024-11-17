@@ -31,12 +31,12 @@
                 <!-- Navegação Sidebar -->
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#avaliacao-conteudo">
+                        <a class="nav-link active" href="#avaliacao-conteudo" aria-label="Ir para Avaliação de Projetos">
                             <i class="bi bi-file-earmark-check"></i> Avaliação de Projetos
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#gestao-instituicoes">
+                        <a class="nav-link" href="#gestao-instituicoes" aria-label="Ir para Gestão de Instituições">
                             <i class="bi bi-building"></i> Gestão de Instituições
                         </a>
                     </li>
@@ -69,7 +69,15 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <!-- Campo de Pesquisa -->
-                            <input type="text" id="searchProjeto" class="form-control w-50" placeholder="Pesquisar Projeto">
+                            <input type="text" id="searchProjeto" class="form-control w-50" placeholder="Pesquisar Projeto" aria-label="Pesquisar Projeto">
+                            
+                            <!-- Filtro de Status -->
+                            <select id="filterStatus" class="form-select w-25">
+                                <option value="">Filtrar por Status</option>
+                                <option value="Pendente">Pendente</option>
+                                <option value="Aprovado">Aprovado</option>
+                                <option value="Rejeitado">Rejeitado</option>
+                            </select>
                         </div>
                         <div class="table-responsive mt-3">
                             <table class="table table-bordered table-hover">
@@ -94,6 +102,7 @@
                                             </span>
                                         </td>
                                         <td>
+                                            <a href="{{ url_for('detalhes_projeto', id=projeto.id) }}" class="btn btn-info btn-sm">Ver Detalhes</a>
                                             {% if projeto.status == 'Pendente' %}
                                             <a href="{{ url_for('aprovar_projeto', id=projeto.id) }}" class="btn btn-success btn-sm">Aprovar</a>
                                             <a href="{{ url_for('rejeitar_projeto', id=projeto.id) }}" class="btn btn-danger btn-sm">Rejeitar</a>
@@ -126,7 +135,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <!-- Campo de Pesquisa -->
-                            <input type="text" id="searchInstituicao" class="form-control w-50" placeholder="Pesquisar Instituição">
+                            <input type="text" id="searchInstituicao" class="form-control w-50" placeholder="Pesquisar Instituição" aria-label="Pesquisar Instituição">
                         </div>
                         <div class="table-responsive mt-3">
                             <table class="table table-bordered table-hover">
@@ -177,26 +186,13 @@
 
     <!-- Scripts do Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Script de Busca -->
+    
+    <!-- Script de Busca e Filtro -->
     <script>
         // Função de filtro para a busca de projetos
         document.getElementById('searchProjeto').addEventListener('input', function() {
             var filter = this.value.toLowerCase();
             var rows = document.querySelectorAll('#tabelaProjetos tr');
-            rows.forEach(function(row) {
-                var cells = row.getElementsByTagName('td');
-                if (cells[1].textContent.toLowerCase().indexOf(filter) > -1 || cells[2].textContent.toLowerCase().indexOf(filter) > -1) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        });
-
-        // Função de filtro para a busca de instituições
-        document.getElementById('searchInstituicao').addEventListener('input', function() {
-            var filter = this.value.toLowerCase();
-            var rows = document.querySelectorAll('#tabelaInstituicoes tr');
             rows.forEach(function(row) {
                 var cells = row.getElementsByTagName('td');
                 if (cells[1].textContent.toLowerCase().indexOf(filter) > -1) {
@@ -206,6 +202,22 @@
                 }
             });
         });
+
+        // Filtro por Status de Projetos
+        document.getElementById('filterStatus').addEventListener('change', function() {
+            var filter = this.value.toLowerCase();
+            var rows = document.querySelectorAll('#tabelaProjetos tr');
+            rows.forEach(function(row) {
+                var cells = row.getElementsByTagName('td');
+                var status = cells[3].textContent.trim().toLowerCase();
+                if (filter === "" || status.indexOf(filter) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     </script>
+
 </body>
 </html>
