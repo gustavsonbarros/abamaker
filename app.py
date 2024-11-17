@@ -204,10 +204,18 @@ def login():
         if usuario and check_password_hash(usuario.senha, senha):
             session['user_id'] = usuario.id
             session['tipo'] = usuario.tipo
-            flash("Login realizado com sucesso!", "success")
-            return redirect(url_for('admin_panel' if usuario.tipo == 'admin' else 'aluno'))
+            
+            # Mensagem de boas-vindas personalizada
+            flash(f"Bem-vindo(a) de volta, {usuario.nome}!", "success")
+            
+            # Redirecionamento baseado no tipo de usuário
+            if usuario.tipo == 'admin':
+                return redirect(url_for('admin_panel'))
+            else:
+                return redirect(url_for('aluno'))
         flash("Credenciais inválidas.", "danger")
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():

@@ -106,8 +106,6 @@
                                             {% if projeto.status == 'Pendente' %}
                                             <a href="{{ url_for('aprovar_projeto', id=projeto.id) }}" class="btn btn-success btn-sm">Aprovar</a>
                                             <a href="{{ url_for('rejeitar_projeto', id=projeto.id) }}" class="btn btn-danger btn-sm">Rejeitar</a>
-                                            {% else %}
-                                            
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -189,7 +187,6 @@
     
     <!-- Script de Busca e Filtro -->
     <script>
-        // Função de filtro para a busca de projetos
         document.getElementById('searchProjeto').addEventListener('input', function() {
             var filter = this.value.toLowerCase();
             var rows = document.querySelectorAll('#tabelaProjetos tr');
@@ -203,14 +200,12 @@
             });
         });
 
-        // Filtro por Status de Projetos
         document.getElementById('filterStatus').addEventListener('change', function() {
             var filter = this.value.toLowerCase();
             var rows = document.querySelectorAll('#tabelaProjetos tr');
             rows.forEach(function(row) {
                 var cells = row.getElementsByTagName('td');
-                var status = cells[3].textContent.trim().toLowerCase();
-                if (filter === "" || status.indexOf(filter) > -1) {
+                if (filter === '' || cells[3].textContent.toLowerCase() === filter) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
@@ -218,6 +213,5 @@
             });
         });
     </script>
-
 </body>
 </html>
