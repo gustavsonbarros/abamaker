@@ -107,12 +107,12 @@
                                             <a href="{{ url_for('aprovar_projeto', id=projeto.id) }}" class="btn btn-success btn-sm">Aprovar</a>
                                             <a href="{{ url_for('rejeitar_projeto', id=projeto.id) }}" class="btn btn-danger btn-sm">Rejeitar</a>
                                             {% else %}
-                                            <span class="text-muted">Nenhuma ação disponível</span>
+                                            
                                             {% endif %}
                                         </td>
                                     </tr>
                                     {% endfor %}
-                                </tbody>
+                                </tbody>        
                             </table>
                             <!-- Paginação -->
                             <nav>
