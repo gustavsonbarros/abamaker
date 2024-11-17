@@ -30,21 +30,24 @@
                 {% endwith %}
                 
                 <!-- Formulário de login -->
-                <form action="{{ url_for('login') }}" method="POST">
+                <form action="{{ url_for('login') }}" method="POST" id="loginForm">
                     <div class="form-group">
                         <label for="email">E-mail:</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
+                        <input type="email" id="email" name="email" class="form-control" required aria-label="E-mail">
                     </div>
                     <div class="form-group">
                         <label for="senha">Senha:</label>
-                        <input type="password" id="senha" name="senha" class="form-control" required>
+                        <input type="password" id="senha" name="senha" class="form-control" required aria-label="Senha">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                    <button type="submit" class="btn btn-primary btn-block" id="loginButton">Entrar</button>
                 </form>
                 
                 <div class="text-center mt-3">
                     <a href="{{ url_for('register') }}">Ainda não tem conta? Cadastre-se</a>
                 </div>
+                <div class="text-center mt-2">
+                    <a href="{{ url_for('forgot_password') }}">Esqueci minha senha</a>
+                </div>           
             </div>
         </div>
     </div>
@@ -52,5 +55,22 @@
     <!-- Scripts do Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Validação no lado do cliente
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            var email = document.getElementById('email').value;
+            var senha = document.getElementById('senha').value;
+
+            if (!email || !senha) {
+                alert("Por favor, preencha todos os campos.");
+                event.preventDefault();  // Impede o envio do formulário se algum campo estiver vazio
+            }
+
+            // Mudando o texto do botão de login para "Carregando..."
+            document.getElementById('loginButton').innerHTML = "Carregando...";
+            document.getElementById('loginButton').disabled = true;
+        });
+    </script>
 </body>
 </html>

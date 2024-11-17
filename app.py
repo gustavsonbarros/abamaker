@@ -82,6 +82,16 @@ def criar_tabelas_e_inserir_dados():
 def editar_perfil():
     return render_template('editar_perfil.html')
 
+# Rota para a página de recuperação de senha
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form['email']
+        # Aqui vai a lógica para enviar o e-mail de recuperação de senha
+        return redirect(url_for('login'))
+    return render_template('forgot_password.html')
+
+
 # Rotas e funcionalidades
 @app.route('/')
 def index():
