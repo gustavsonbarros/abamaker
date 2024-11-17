@@ -6,7 +6,7 @@
     <title>Projetos</title>
     <!-- Incluir Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">     
     <style>
         .project-card {
             border: 1px solid #ddd;
@@ -41,9 +41,31 @@
             height: 8px;
             background-color: #007bff;
         }
+        .like-btn {
+            cursor: pointer;
+        }
+        .like-count {
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        .filter-section {
+            margin-bottom: 30px;
+        }
+        .filter-section select {
+            width: 150px;
+        }
+        .project-card {
+            transition: all 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body>
+    <button onclick="window.history.back();" class="btn-voltar">
+        <i class="fas fa-arrow-left"></i> <span>Voltar</span>
+    </button>
+</body>
+
+
     <div class="container mt-4">
         <h1 class="mb-4">Projetos</h1>
 
@@ -68,7 +90,7 @@
                 <div class="card">
                     <img src="/static/img/cardproject01.jpg" alt="Projeto 1" class="project-img">
                     <div class="card-body">
-                        <h5 class="mt-3">Projeto 1</h5>
+                        <h5 class="mt-3">Transformando Ideias em Resultados</h5>
                         <p class="text-muted">10/05/2023</p>
                         <span class="status-badge status-ativo">Ativo</span>
                         <div class="progress mt-2">
@@ -77,6 +99,10 @@
                         <a href="#" class="btn btn-info btn-sm mt-3">
                             <i class="fas fa-info-circle"></i> Detalhes
                         </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -86,7 +112,7 @@
                 <div class="card">
                     <img src="/static/img/cardproject02.jpg" alt="Projeto 2" class="project-img">
                     <div class="card-body">
-                        <h5 class="mt-3">Projeto 2</h5>
+                        <h5 class="mt-3">Rumo ao Sucesso</h5>
                         <p class="text-muted">10/05/2023</p>
                         <span class="status-badge status-ativo">Ativo</span>
                         <div class="progress mt-2">
@@ -95,6 +121,10 @@
                         <a href="#" class="btn btn-info btn-sm mt-3">
                             <i class="fas fa-info-circle"></i> Detalhes
                         </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -104,7 +134,7 @@
                 <div class="card">
                     <img src="/static/img/cardproject03.png" alt="Projeto 3" class="project-img">
                     <div class="card-body">
-                        <h5 class="mt-3">Projeto 3</h5>
+                        <h5 class="mt-3">Desenvolvimento Inteligente</h5>
                         <p class="text-muted">01/06/2023</p>
                         <span class="status-badge status-ativo">Ativo</span>
                         <div class="progress mt-2">
@@ -113,6 +143,10 @@
                         <a href="#" class="btn btn-info btn-sm mt-3">
                             <i class="fas fa-info-circle"></i> Detalhes
                         </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,7 +156,7 @@
                 <div class="card">
                     <img src="/static/img/cardproject04.jpg" alt="Projeto 4" class="project-img">
                     <div class="card-body">
-                        <h5 class="mt-3">Projeto 4</h5>
+                        <h5 class="mt-3">Conexão e Inovação</h5>
                         <p class="text-muted">20/07/2023</p>
                         <span class="status-badge status-inativo">Inativo</span>
                         <div class="progress mt-2">
@@ -131,6 +165,10 @@
                         <a href="#" class="btn btn-info btn-sm mt-3">
                             <i class="fas fa-info-circle"></i> Detalhes
                         </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -140,7 +178,7 @@
                 <div class="card">
                     <img src="/static/img/cardproject05.jpg" alt="Projeto 5" class="project-img">
                     <div class="card-body">
-                        <h5 class="mt-3">Projeto 5</h5>
+                        <h5 class="mt-3">Tecnologia e Impacto</h5>
                         <p class="text-muted">30/08/2023</p>
                         <span class="status-badge status-ativo">Ativo</span>
                         <div class="progress mt-2">
@@ -149,31 +187,156 @@
                         <a href="#" class="btn btn-info btn-sm mt-3">
                             <i class="fas fa-info-circle"></i> Detalhes
                         </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Card do Projeto 6 -->
-            <div class="col-md-4 mb-4 project-card" data-status="Inativo" data-date="2023-09-10">
+            <div class="col-md-4 mb-4 project-card" data-status="Concluído" data-date="2023-09-15">
                 <div class="card">
                     <img src="/static/img/cardproject06.png" alt="Projeto 6" class="project-img">
                     <div class="card-body">
-                        <h5 class="mt-3">Projeto 6</h5>
-                        <p class="text-muted">10/09/2023</p>
-                        <span class="status-badge status-inativo">Inativo</span>
+                        <h5 class="mt-3">Desenvolvimento Sustentável</h5>
+                        <p class="text-muted">15/09/2023</p>
+                        <span class="status-badge status-concluido">Concluído</span>
                         <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <a href="#" class="btn btn-info btn-sm mt-3">
                             <i class="fas fa-info-circle"></i> Detalhes
                         </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-md-4 mb-4 project-card" data-status="Em andamento" data-date="2023-10-05">
+                <div class="card">
+                    <img src="/static/img/cardproject07.jpg" alt="Projeto 7" class="project-img">
+                    <div class="card-body">
+                        <h5 class="mt-3">Transformação Digital</h5>
+                        <p class="text-muted">05/10/2023</p>
+                        <span class="status-badge status-em-andamento">Em andamento</span>
+                        <div class="progress mt-2">
+                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <a href="#" class="btn btn-info btn-sm mt-3">
+                            <i class="fas fa-info-circle"></i> Detalhes
+                        </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4 project-card" data-status="Ativo" data-date="2023-11-01">
+                <div class="card">
+                    <img src="/static/img/cardproject08.jpg" alt="Projeto 8" class="project-img">
+                    <div class="card-body">
+                        <h5 class="mt-3">Inteligência Artificial em Saúde</h5>
+                        <p class="text-muted">01/11/2023</p>
+                        <span class="status-badge status-ativo">Ativo</span>
+                        <div class="progress mt-2">
+                            <div class="progress-bar" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <a href="#" class="btn btn-info btn-sm mt-3">
+                            <i class="fas fa-info-circle"></i> Detalhes
+                        </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4 project-card" data-status="Concluído" data-date="2023-07-22">
+                <div class="card">
+                    <img src="/static/img/cardproject09.jpg" alt="Projeto 9" class="project-img">
+                    <div class="card-body">
+                        <h5 class="mt-3">Cidades Inteligentes</h5>
+                        <p class="text-muted">22/07/2023</p>
+                        <span class="status-badge status-concluido">Concluído</span>
+                        <div class="progress mt-2">
+                            <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <a href="#" class="btn btn-info btn-sm mt-3">
+                            <i class="fas fa-info-circle"></i> Detalhes
+                        </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4 project-card" data-status="Ativo" data-date="2023-11-10">
+                <div class="card">
+                    <img src="/static/img/cardproject10.png" alt="Projeto 10" class="project-img">
+                    <div class="card-body">
+                        <h5 class="mt-3">Blockchain para Todos</h5>
+                        <p class="text-muted">10/11/2023</p>
+                        <span class="status-badge status-ativo">Ativo</span>
+                        <div class="progress mt-2">
+                            <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <a href="#" class="btn btn-info btn-sm mt-3">
+                            <i class="fas fa-info-circle"></i> Detalhes
+                        </a>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
+                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- Incluir Bootstrap JS (opcional, para funcionalidades interativas) -->
+    <!-- Scripts -->
+    <script>
+        // Função para curtir projeto
+        function likeProject(element) {
+            let likeCounter = element.nextElementSibling.querySelector('.like-counter');
+            let currentLikes = parseInt(likeCounter.innerText);
+            likeCounter.innerText = currentLikes + 1;
+        }
+
+        // Filtros
+        document.getElementById('filter-status').addEventListener('change', function() {
+            let status = this.value;
+            let projects = document.querySelectorAll('.project-card');
+            projects.forEach(function(project) {
+                if (status && project.dataset.status !== status) {
+                    project.style.display = 'none';
+                } else {
+                    project.style.display = 'block';
+                }
+            });
+        });
+
+        document.getElementById('filter-date').addEventListener('change', function() {
+            let sort = this.value;
+            let projects = Array.from(document.querySelectorAll('.project-card'));
+            if (sort === 'mais-recente') {
+                projects.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
+            } else if (sort === 'mais-antigo') {
+                projects.sort((a, b) => new Date(a.dataset.date) - new Date(b.dataset.date));
+            }
+            let grid = document.getElementById('project-grid');
+            grid.innerHTML = '';
+            projects.forEach(function(project) {
+                grid.appendChild(project);
+            });
+        });
+    </script>
+    
+    <!-- Incluir Bootstrap e Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
