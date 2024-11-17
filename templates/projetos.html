@@ -339,4 +339,25 @@
     <!-- Incluir Bootstrap e Font Awesome -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script>
+    function likeProject(element) {
+        // Encontrar o contador de curtidas relacionado ao card
+        const likeCounter = element.closest('.card-body').querySelector('.like-counter');
+        let currentLikes = parseInt(likeCounter.innerText);
+
+        // Atualizar o contador de curtidas
+        likeCounter.innerText = currentLikes + 1;
+
+        // Adicionar a classe 'liked' para mudar o ícone de coração
+        element.classList.toggle('liked');
+
+        // Alterar o ícone do coração (exemplo: colorir de vermelho quando curtido)
+        if (element.classList.contains('liked')) {
+            element.style.color = 'red'; // Coração vermelho quando curtir
+        } else {
+            element.style.color = ''; // Retornar à cor original quando desfazer curtida
+        }
+    }
+</script>
+
 </html>
