@@ -1,0 +1,54 @@
+Incrementos para index.html:
+
+    Busca de Projetos:
+        Adicione um campo de busca para que os usuários encontrem projetos específicos rapidamente.
+        Inclua filtros por categoria, status ou palavras-chave.
+
+    Comentários nos Projetos:
+        Permita que os visitantes comentem nos projetos apresentados nos cards.
+        Adicione uma funcionalidade de "responder comentário".
+
+    Avaliação dos Projetos:
+        Adicione uma funcionalidade de avaliação por estrelas ou notas nos projetos.
+
+    Notificações:
+        Adicione uma seção de notificações para novos projetos ou eventos importantes.
+
+    Melhorias na seção de FAQ:
+        Transforme a seção FAQ em algo dinâmico, como um chatbot que responda perguntas comuns.
+
+    Feedback Avançado:
+        Adicione opções de anexar arquivos ou imagens nos formulários de feedback.
+
+    Animações ou Microinterações:
+        Adicione efeitos visuais para cliques em botões ou ao rolar a página, como transições suaves ou animações.
+
+
+
+Incrementos para aluno.html:
+
+    Painel de Controle Personalizado:
+        Crie um painel com gráficos que mostram o progresso dos projetos do aluno.
+        Exiba estatísticas de participação, como número de projetos criados ou colaborados.
+
+    Sistema de Mensagens Internas:
+        Permita que alunos se comuniquem entre si ou com orientadores diretamente pela plataforma.
+
+    Gestão de Tarefas:
+        Adicione uma funcionalidade para criar, atribuir e gerenciar tarefas relacionadas aos projetos.
+
+    Histórico de Projetos:
+        Exiba projetos antigos com um botão para "revisitar" ou "reanalisar".
+
+    Upload Avançado:
+        Adicione pré-visualização de arquivos antes do upload.
+        Permita múltiplos uploads de uma vez.
+
+    Certificados ou Badges:
+        Implemente um sistema para que alunos recebam certificados ou badges ao concluírem projetos.
+
+    Sessões de Aprendizado:
+        Adicione uma seção com vídeos, artigos ou recursos educacionais relacionados aos temas maker.
+
+    Compartilhamento Social:
+        Inclua botões para compartilhar projetos diretamente nas redes sociais.

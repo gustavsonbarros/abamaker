@@ -6,29 +6,41 @@
     <meta name="description" content="Painel Administrativo para Gestão de Projetos e Instituições">
     <title>Painel Administrativo</title>
     
-    <!-- Link do Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Link dos ícones do Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Link para o CSS personalizado -->
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <!-- Bootstrap 5 -->
+    <style>
+        @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css');
+        @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css');
+    </style>
     
-    <!-- Pré-carregamento de favicon -->
-    <link rel="icon" href="/path-to-your-favicon.ico" type="image/x-icon">
+    <!-- Estilo personalizado -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .sidebar {
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+        .sidebar header {
+            margin-bottom: 1rem;
+        }
+        .sidebar .nav-link.active {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+    </style>
 </head>
 <body>
-
     <div class="d-flex flex-column flex-md-row">
-        <!-- Barra lateral (Sidebar) -->
+        <!-- Barra lateral -->
         <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar p-3">
             <div class="position-sticky">
                 <header>
                     <h2 class="h4">Painel Administrativo</h2>
                     <a href="/" class="btn btn-link">Voltar para a Tela Inicial</a>
-                    <a href="{{ url_for('logout') }}" class="btn btn-link">Sair</a>
+                    <a href="/logout" class="btn btn-link">Sair</a>
                 </header>
-
-                <!-- Navegação Sidebar -->
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="#avaliacao-conteudo" aria-label="Ir para Avaliação de Projetos">
@@ -44,34 +56,19 @@
             </div>
         </nav>
 
-        <!-- Conteúdo Principal -->
+        <!-- Conteúdo principal -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
             <header>
                 <h1 class="my-4">Painel Administrativo</h1>
             </header>
-
-            <!-- Mensagens Flash -->
-            <div class="container">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endif %}
-                {% endwith %}
-            </div>
-
+            
             <!-- Avaliação de Projetos -->
             <section id="avaliacao-conteudo" class="mt-5">
                 <h2>Avaliação de Projetos</h2>
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
-                            <!-- Campo de Pesquisa -->
                             <input type="text" id="searchProjeto" class="form-control w-50" placeholder="Pesquisar Projeto" aria-label="Pesquisar Projeto">
-                            
-                            <!-- Filtro de Status -->
                             <select id="filterStatus" class="form-select w-25">
                                 <option value="">Filtrar por Status</option>
                                 <option value="Pendente">Pendente</option>
@@ -91,36 +88,20 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tabelaProjetos">
-                                    {% for projeto in projetos %}
+                                    <!-- Exemplo de Dados -->
                                     <tr>
-                                        <th>{{ projeto.id }}</th>
-                                        <td>{{ projeto.nome }}</td>
-                                        <td>{{ projeto.data_submissao }}</td>
+                                        <th>1</th>
+                                        <td>Projeto Alpha</td>
+                                        <td>2024-01-01</td>
+                                        <td><span class="badge bg-warning">Pendente</span></td>
                                         <td>
-                                            <span class="badge bg-{{ 'warning' if projeto.status == 'Pendente' else 'success' }}">
-                                                {{ projeto.status }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ url_for('detalhes_projeto', id=projeto.id) }}" class="btn btn-info btn-sm">Ver Detalhes</a>
-                                            {% if projeto.status == 'Pendente' %}
-                                            <a href="{{ url_for('aprovar_projeto', id=projeto.id) }}" class="btn btn-success btn-sm">Aprovar</a>
-                                            <a href="{{ url_for('rejeitar_projeto', id=projeto.id) }}" class="btn btn-danger btn-sm">Rejeitar</a>
-                                            {% endif %}
+                                            <button class="btn btn-info btn-sm">Ver Detalhes</button>
+                                            <button class="btn btn-success btn-sm">Aprovar</button>
+                                            <button class="btn btn-danger btn-sm">Rejeitar</button>
                                         </td>
                                     </tr>
-                                    {% endfor %}
-                                </tbody>        
+                                </tbody>
                             </table>
-                            <!-- Paginação -->
-                            <nav>
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">Próxima</a></li>
-                                </ul>
-                            </nav>
                         </div>
                     </div>
                 </div>
@@ -131,10 +112,7 @@
                 <h2>Gestão de Instituições</h2>
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <!-- Campo de Pesquisa -->
-                            <input type="text" id="searchInstituicao" class="form-control w-50" placeholder="Pesquisar Instituição" aria-label="Pesquisar Instituição">
-                        </div>
+                        <input type="text" id="searchInstituicao" class="form-control w-50" placeholder="Pesquisar Instituição" aria-label="Pesquisar Instituição">
                         <div class="table-responsive mt-3">
                             <table class="table table-bordered table-hover">
                                 <thead class="table-dark">
@@ -146,70 +124,88 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tabelaInstituicoes">
-                                    {% for instituicao in instituicoes %}
+                                    <!-- Exemplo de Dados -->
                                     <tr>
-                                        <th>{{ instituicao.id }}</th>
-                                        <td>{{ instituicao.nome }}</td>
-                                        <td>
-                                            <span class="badge bg-{{ 'success' if instituicao.status == 'Aprovada' else 'danger' }}">
-                                                {{ instituicao.status }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {% if instituicao.status == 'Aprovada' %}
-                                            <a href="{{ url_for('suspender_instituicao', id=instituicao.id) }}" class="btn btn-warning btn-sm">Suspender</a>
-                                            {% else %}
-                                            <a href="{{ url_for('reativar_instituicao', id=instituicao.id) }}" class="btn btn-success btn-sm">Reativar</a>
-                                            {% endif %}
-                                        </td>
+                                        <th>1</th>
+                                        <td>Instituição Beta</td>
+                                        <td><span class="badge bg-success">Aprovada</span></td>
+                                        <td><button class="btn btn-warning btn-sm">Suspender</button></td>
                                     </tr>
-                                    {% endfor %}
                                 </tbody>
                             </table>
-                            <!-- Paginação -->
-                            <nav>
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">Próxima</a></li>
-                                </ul>
-                            </nav>
                         </div>
                     </div>
                 </div>
             </section>
+            <!-- Gestão de Feedbacks -->
+<section id="gestao-feedbacks" class="mt-5">
+    <h2>Gestão de Feedbacks</h2>
+    <div class="card">
+        <div class="card-body">
+            <input type="text" id="searchFeedback" class="form-control w-50 mb-3" placeholder="Pesquisar Feedback" aria-label="Pesquisar Feedback">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Usuário</th>
+                            <th>Tipo</th>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaFeedbacks">
+                        <!-- Exemplo de Dados -->
+                        <tr>
+                            <th>1</th>
+                            <td>João Silva</td>
+                            <td><span class="badge bg-success">Positivo</span></td>
+                            <td>2024-11-18</td>
+                            <td>Ótimo projeto, gostei muito!</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm">Ver Detalhes</button>
+                                <button class="btn btn-danger btn-sm">Excluir</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>2</th>
+                            <td>Maria Santos</td>
+                            <td><span class="badge bg-warning">Neutro</span></td>
+                            <td>2024-11-19</td>
+                            <td>Precisa de melhorias na documentação.</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm">Ver Detalhes</button>
+                                <button class="btn btn-danger btn-sm">Excluir</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
         </main>
     </div>
 
-    <!-- Scripts do Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Script de Busca e Filtro -->
+    <!-- JavaScript -->
     <script>
         document.getElementById('searchProjeto').addEventListener('input', function() {
-            var filter = this.value.toLowerCase();
-            var rows = document.querySelectorAll('#tabelaProjetos tr');
-            rows.forEach(function(row) {
-                var cells = row.getElementsByTagName('td');
-                if (cells[1].textContent.toLowerCase().indexOf(filter) > -1) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#tabelaProjetos tr');
+            rows.forEach(row => {
+                const nameCell = row.cells[1]?.textContent.toLowerCase() || '';
+                row.style.display = nameCell.includes(filter) ? '' : 'none';
             });
         });
 
         document.getElementById('filterStatus').addEventListener('change', function() {
-            var filter = this.value.toLowerCase();
-            var rows = document.querySelectorAll('#tabelaProjetos tr');
-            rows.forEach(function(row) {
-                var cells = row.getElementsByTagName('td');
-                if (filter === '' || cells[3].textContent.toLowerCase() === filter) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#tabelaProjetos tr');
+            rows.forEach(row => {
+                const statusCell = row.cells[3]?.textContent.toLowerCase() || '';
+                row.style.display = !filter || statusCell === filter ? '' : 'none';
             });
         });
     </script>
