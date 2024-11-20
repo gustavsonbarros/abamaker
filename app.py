@@ -136,16 +136,38 @@ def register():
 
     return render_template('register.html')
 
+@app.route('/adicionar_instituicao', methods=['GET', 'POST'])
+def adicionar_instituicao():
+    if 'user_id' not in session or session.get('tipo') != 'admin':
+        flash("Acesso negado. Faça login como admin.", "danger")
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        nome = request.form['nome']
+        status = request.form['status']
+
+        if not nome or not status:
+            flash("Todos os campos são obrigatórios!", "danger")
+            return redirect(url_for('adicionar_instituicao'))
+        
+        nova_instituicao = Instituicao(nome=nome, status=status)
+        db.session.add(nova_instituicao)
+        db.session.commit()
+        flash("Instituição cadastrada com sucesso!", "success")
+        return redirect(url_for('admin_panel'))
+    
+    return render_template('adicionar_instituicao.html')
+
+
 @app.route('/aprovar_projeto/<int:id>', methods=['GET'])
 def aprovar_projeto(id):
     projeto = Projeto.query.get_or_404(id)
     if projeto.status == 'Pendente':
         projeto.status = 'Aprovado'
         db.session.commit()
-        flash(f"Projeto '{projeto.nome}' aprovado com sucesso!", "success")
-    else:
-        flash("Este projeto já foi aprovado ou rejeitado.", "warning")
-    return redirect(url_for('admin_panel'))
+        return {'success': True}
+    return {'success': False}, 400
+
 
 @app.route('/rejeitar_projeto/<int:id>', methods=['GET'])
 def rejeitar_projeto(id):
@@ -153,20 +175,42 @@ def rejeitar_projeto(id):
     if projeto.status == 'Pendente':
         projeto.status = 'Rejeitado'
         db.session.commit()
-        flash(f"Projeto '{projeto.nome}' rejeitado com sucesso!", "danger")
+        return {'success': True}
+    return {'success': False}, 400
+
+
+@app.route('/suspender_instituicao/<int:id>', methods=['GET'])
+def suspender_instituicao(id):
+    instituicao = Instituicao.query.get_or_404(id)
+    if instituicao.status != "Suspensa":
+        instituicao.status = "Suspensa"
+        db.session.commit()
+        flash(f"Institution '{instituicao.nome}' suspended successfully.", "warning")
     else:
-        flash("Este projeto já foi aprovado ou rejeitado.", "warning")
+        flash(f"Institution '{instituicao.nome}' is already suspended.", "info")
     return redirect(url_for('admin_panel'))
 
-@app.route('/suspender_instituicao/<int:id>', methods=['GET', 'POST'])
-def suspender_instituicao(id):
-    # Lógica para suspender a instituição
-    return redirect(url_for('admin_panel')) 
 
-@app.route('/reativar_instituicao/<int:id>', methods=['GET', 'POST'])
+@app.route('/reativar_instituicao/<int:id>', methods=['GET'])
 def reativar_instituicao(id):
-    # Lógica para reativar a instituição
-    return redirect(url_for('admin_panel')) # ou outra ação apropriada
+    instituicao = Instituicao.query.get_or_404(id)
+    if instituicao.status != "Aprovada":
+        instituicao.status = "Aprovada"
+        db.session.commit()
+        flash(f"Institution '{instituicao.nome}' reactivated successfully.", "success")
+    else:
+        flash(f"Institution '{instituicao.nome}' is already active.", "info")
+    return redirect(url_for('admin_panel'))
+
+@app.route('/excluir_instituicao/<int:id>', methods=['POST'])
+def excluir_instituicao(id):
+    instituicao = Instituicao.query.get_or_404(id)
+    db.session.delete(instituicao)
+    db.session.commit()
+    flash(f"Institution '{instituicao.nome}' deleted successfully.", "danger")
+    return redirect(url_for('admin_panel'))
+
+
 
 # Função auxiliar para verificar tipos de arquivo permitidos
 def allowed_file(filename):
@@ -265,6 +309,17 @@ def aluno():
 def detalhes_projeto(id):
     projeto = Projeto.query.get(id)  # Aqui você pega o projeto com o ID
     return render_template('detalhes_projeto.html', projeto=projeto)
+
+@app.route('/detalhes_projeto/<int:id>', methods=['GET'])
+def api_detalhes_projeto(id):
+    projeto = Projeto.query.get_or_404(id)
+    return {
+        'id': projeto.id,
+        'nome': projeto.nome,
+        'data_submissao': projeto.data_submissao,
+        'status': projeto.status,
+        'descricao': "Descrição detalhada do projeto"  
+    }
 
 
 

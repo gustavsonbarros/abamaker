@@ -7,11 +7,9 @@
     <title>Painel Administrativo</title>
     
     <!-- Bootstrap 5 -->
-    <style>
-        @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css');
-        @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css');
-    </style>
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- Estilo personalizado -->
     <style>
         body {
@@ -43,12 +41,12 @@
                 </header>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#avaliacao-conteudo" aria-label="Ir para Avaliação de Projetos">
+                        <a class="nav-link active" href="#avaliacao-conteudo">
                             <i class="bi bi-file-earmark-check"></i> Avaliação de Projetos
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#gestao-instituicoes" aria-label="Ir para Gestão de Instituições">
+                        <a class="nav-link" href="#gestao-instituicoes">
                             <i class="bi bi-building"></i> Gestão de Instituições
                         </a>
                     </li>
@@ -58,17 +56,48 @@
 
         <!-- Conteúdo principal -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
-            <header>
-                <h1 class="my-4">Painel Administrativo</h1>
-            </header>
-            
+            <!-- Gestão de Instituições -->
+            <section id="gestao-instituicoes" class="mt-5">
+                <h2>Gestão de Instituições</h2>
+                <div class="d-flex justify-content-between mb-3">
+                    <input type="text" id="searchInstituicao" class="form-control w-50" placeholder="Pesquisar Instituição">
+                    <a href="/adicionar_instituicao" class="btn btn-primary">Adicionar Nova Instituição</a>
+                </div>
+                <div class="table-responsive mt-3">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Instituição</th>
+                                <th>Status</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaInstituicoes">
+                            {% for instituicao in instituicoes %}
+                            <tr>
+                                <th>{{ instituicao.id }}</th>
+                                <td>{{ instituicao.nome }}</td>
+                                <td><span class="badge bg-{{ 'success' if instituicao.status == 'Aprovada' else 'warning' }}">{{ instituicao.status }}</span></td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="suspenderInstituicao({{ instituicao.id }})">Suspender</button>
+                                    <button class="btn btn-success btn-sm" onclick="reativarInstituicao({{ instituicao.id }})">Reativar</button>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmarExclusao({{ instituicao.id }}, '{{ instituicao.nome }}')">Excluir</button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <!-- Avaliação de Projetos -->
             <section id="avaliacao-conteudo" class="mt-5">
                 <h2>Avaliação de Projetos</h2>
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
-                            <input type="text" id="searchProjeto" class="form-control w-50" placeholder="Pesquisar Projeto" aria-label="Pesquisar Projeto">
+                            <input type="text" id="searchProjeto" class="form-control w-50" placeholder="Pesquisar Projeto">
                             <select id="filterStatus" class="form-select w-25">
                                 <option value="">Filtrar por Status</option>
                                 <option value="Pendente">Pendente</option>
@@ -88,16 +117,17 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tabelaProjetos">
-                                    <!-- Exemplo de Dados -->
                                     <tr>
                                         <th>1</th>
                                         <td>Projeto Alpha</td>
                                         <td>2024-01-01</td>
                                         <td><span class="badge bg-warning">Pendente</span></td>
                                         <td>
-                                            <button class="btn btn-info btn-sm">Ver Detalhes</button>
-                                            <button class="btn btn-success btn-sm">Aprovar</button>
-                                            <button class="btn btn-danger btn-sm">Rejeitar</button>
+                                            <button class="btn btn-info btn-sm" onclick="abrirModalProjeto(1, 'Projeto Alpha', '2024-01-01', 'Pendente', 'Descrição detalhada do Projeto Alpha')">
+                                                Ver Detalhes
+                                            </button>
+                                            <button class="btn btn-success btn-sm" onclick="aprovarProjeto(this, 1)">Aprovar</button>
+                                            <button class="btn btn-danger btn-sm" onclick="rejeitarProjeto(this, 1)">Rejeitar</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -107,107 +137,68 @@
                 </div>
             </section>
 
-            <!-- Gestão de Instituições -->
-            <section id="gestao-instituicoes" class="mt-5">
-                <h2>Gestão de Instituições</h2>
-                <div class="card">
-                    <div class="card-body">
-                        <input type="text" id="searchInstituicao" class="form-control w-50" placeholder="Pesquisar Instituição" aria-label="Pesquisar Instituição">
-                        <div class="table-responsive mt-3">
-                            <table class="table table-bordered table-hover">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Instituição</th>
-                                        <th>Status</th>
-                                        <th>Ação</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tabelaInstituicoes">
-                                    <!-- Exemplo de Dados -->
-                                    <tr>
-                                        <th>1</th>
-                                        <td>Instituição Beta</td>
-                                        <td><span class="badge bg-success">Aprovada</span></td>
-                                        <td><button class="btn btn-warning btn-sm">Suspender</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- Gestão de Feedbacks -->
-<section id="gestao-feedbacks" class="mt-5">
-    <h2>Gestão de Feedbacks</h2>
-    <div class="card">
-        <div class="card-body">
-            <input type="text" id="searchFeedback" class="form-control w-50 mb-3" placeholder="Pesquisar Feedback" aria-label="Pesquisar Feedback">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>#</th>
-                            <th>Usuário</th>
-                            <th>Tipo</th>
-                            <th>Data</th>
-                            <th>Descrição</th>
-                            <th>Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaFeedbacks">
-                        <!-- Exemplo de Dados -->
-                        <tr>
-                            <th>1</th>
-                            <td>João Silva</td>
-                            <td><span class="badge bg-success">Positivo</span></td>
-                            <td>2024-11-18</td>
-                            <td>Ótimo projeto, gostei muito!</td>
-                            <td>
-                                <button class="btn btn-primary btn-sm">Ver Detalhes</button>
-                                <button class="btn btn-danger btn-sm">Excluir</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>2</th>
-                            <td>Maria Santos</td>
-                            <td><span class="badge bg-warning">Neutro</span></td>
-                            <td>2024-11-19</td>
-                            <td>Precisa de melhorias na documentação.</td>
-                            <td>
-                                <button class="btn btn-primary btn-sm">Ver Detalhes</button>
-                                <button class="btn btn-danger btn-sm">Excluir</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</section>
-
         </main>
     </div>
 
+    <!-- Modal para Pré-visualização de Projetos -->
+    <div class="modal fade" id="modalProjeto" tabindex="-1" aria-labelledby="modalProjetoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProjetoLabel">Detalhes do Projeto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="modalNomeProjeto">Nome do Projeto</h4>
+                    <p><strong>Data de Submissão:</strong> <span id="modalDataSubmissao"></span></p>
+                    <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+                    <p id="modalDescricao">Descrição completa do projeto será exibida aqui.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('searchProjeto').addEventListener('input', function() {
             const filter = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#tabelaProjetos tr');
-            rows.forEach(row => {
+            document.querySelectorAll('#tabelaProjetos tr').forEach(row => {
                 const nameCell = row.cells[1]?.textContent.toLowerCase() || '';
                 row.style.display = nameCell.includes(filter) ? '' : 'none';
             });
         });
 
-        document.getElementById('filterStatus').addEventListener('change', function() {
-            const filter = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#tabelaProjetos tr');
-            rows.forEach(row => {
-                const statusCell = row.cells[3]?.textContent.toLowerCase() || '';
-                row.style.display = !filter || statusCell === filter ? '' : 'none';
-            });
-        });
+        function suspenderInstituicao(id) {
+            fetch(`/suspender_instituicao/${id}`)
+                .then(response => response.ok ? location.reload() : alert("Erro ao suspender a instituição."));
+        }
+
+        function reativarInstituicao(id) {
+            fetch(`/reativar_instituicao/${id}`)
+                .then(response => response.ok ? location.reload() : alert("Erro ao reativar a instituição."));
+        }
+
+        // Função para confirmar a exclusão
+        function confirmarExclusao(id, nome) {
+            if (confirm(`Você tem certeza que deseja excluir a instituição "${nome}"? Esta ação não pode ser desfeita.`)) {
+                fetch(`/excluir_instituicao/${id}`, { method: 'POST' })
+                    .then(response => response.ok ? location.reload() : alert("Erro ao excluir a instituição."))
+                    .catch(error => alert("Erro ao excluir a instituição."));
+            }
+        }
+
+        function abrirModalProjeto(id, nome, dataSubmissao, status, descricao) {
+            document.getElementById('modalNomeProjeto').textContent = nome;
+            document.getElementById('modalDataSubmissao').textContent = dataSubmissao;
+            document.getElementById('modalStatus').textContent = status;
+            document.getElementById('modalDescricao').textContent = descricao;
+            const modal = new bootstrap.Modal(document.getElementById('modalProjeto'));
+            modal.show();
+        }
     </script>
 </body>
 </html>
