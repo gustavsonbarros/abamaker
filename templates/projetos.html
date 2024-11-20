@@ -8,6 +8,39 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">     
     <style>
+        /* Estilos para o Cabeçalho */
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .btn-voltar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .btn-voltar:hover {
+            background-color: #0056b3;
+        }
+        .btn-voltar i {
+            margin-right: 8px;
+        }
+
+        /* Estilos para os cards dos projetos */
         .project-card {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -54,20 +87,30 @@
         .filter-section select {
             width: 150px;
         }
+        .search-section {
+            margin-bottom: 20px;
+        }
         .project-card {
             transition: all 0.3s ease-in-out;
         }
     </style>
 </head>
 <body>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <h1>Projetos</h1>
+    </div>
+
+    <!-- Botão Voltar -->
     <button onclick="window.history.back();" class="btn-voltar">
         <i class="fas fa-arrow-left"></i> <span>Voltar</span>
     </button>
-</body>
-
 
     <div class="container mt-4">
-        <h1 class="mb-4">Projetos</h1>
+        <!-- Campo de Pesquisa -->
+        <div class="search-section mb-4">
+            <input type="text" id="search-input" class="form-control" placeholder="Pesquisar por nome do projeto" />
+        </div>
 
         <!-- Filtros -->
         <div class="filter-section d-flex justify-content-between mb-4">
@@ -75,6 +118,8 @@
                 <option value="">Filtrar por Status</option>
                 <option value="Ativo">Ativo</option>
                 <option value="Inativo">Inativo</option>
+                <option value="Concluído">Concluído</option>
+                <option value="Em andamento">Em andamento</option>
             </select>
             <select class="form-select w-auto" id="filter-date">
                 <option value="">Filtrar por Data</option>
@@ -85,279 +130,148 @@
 
         <!-- Grid de Projetos -->
         <div class="row" id="project-grid">
-            <!-- Card do Projeto 1 -->
-            <div class="col-md-4 mb-4 project-card" data-status="Ativo" data-date="2023-05-10">
-                <div class="card">
-                    <img src="/static/img/cardproject01.jpg" alt="Projeto 1" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Transformando Ideias em Resultados</h5>
-                        <p class="text-muted">10/05/2023</p>
-                        <span class="status-badge status-ativo">Ativo</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card do Projeto 2 -->
-            <div class="col-md-4 mb-4 project-card" data-status="Ativo" data-date="2023-05-10">
-                <div class="card">
-                    <img src="/static/img/cardproject02.jpg" alt="Projeto 2" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Rumo ao Sucesso</h5>
-                        <p class="text-muted">10/05/2023</p>
-                        <span class="status-badge status-ativo">Ativo</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card do Projeto 3 -->
-            <div class="col-md-4 mb-4 project-card" data-status="Ativo" data-date="2023-06-01">
-                <div class="card">
-                    <img src="/static/img/cardproject03.png" alt="Projeto 3" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Desenvolvimento Inteligente</h5>
-                        <p class="text-muted">01/06/2023</p>
-                        <span class="status-badge status-ativo">Ativo</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card do Projeto 4 -->
-            <div class="col-md-4 mb-4 project-card" data-status="Inativo" data-date="2023-07-20">
-                <div class="card">
-                    <img src="/static/img/cardproject04.jpg" alt="Projeto 4" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Conexão e Inovação</h5>
-                        <p class="text-muted">20/07/2023</p>
-                        <span class="status-badge status-inativo">Inativo</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card do Projeto 5 -->
-            <div class="col-md-4 mb-4 project-card" data-status="Ativo" data-date="2023-08-30">
-                <div class="card">
-                    <img src="/static/img/cardproject05.jpg" alt="Projeto 5" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Tecnologia e Impacto</h5>
-                        <p class="text-muted">30/08/2023</p>
-                        <span class="status-badge status-ativo">Ativo</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4 project-card" data-status="Concluído" data-date="2023-09-15">
-                <div class="card">
-                    <img src="/static/img/cardproject06.png" alt="Projeto 6" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Desenvolvimento Sustentável</h5>
-                        <p class="text-muted">15/09/2023</p>
-                        <span class="status-badge status-concluido">Concluído</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4 project-card" data-status="Em andamento" data-date="2023-10-05">
-                <div class="card">
-                    <img src="/static/img/cardproject07.jpg" alt="Projeto 7" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Transformação Digital</h5>
-                        <p class="text-muted">05/10/2023</p>
-                        <span class="status-badge status-em-andamento">Em andamento</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4 project-card" data-status="Ativo" data-date="2023-11-01">
-                <div class="card">
-                    <img src="/static/img/cardproject08.jpg" alt="Projeto 8" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Inteligência Artificial em Saúde</h5>
-                        <p class="text-muted">01/11/2023</p>
-                        <span class="status-badge status-ativo">Ativo</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4 project-card" data-status="Concluído" data-date="2023-07-22">
-                <div class="card">
-                    <img src="/static/img/cardproject09.jpg" alt="Projeto 9" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Cidades Inteligentes</h5>
-                        <p class="text-muted">22/07/2023</p>
-                        <span class="status-badge status-concluido">Concluído</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4 project-card" data-status="Ativo" data-date="2023-11-10">
-                <div class="card">
-                    <img src="/static/img/cardproject10.png" alt="Projeto 10" class="project-img">
-                    <div class="card-body">
-                        <h5 class="mt-3">Blockchain para Todos</h5>
-                        <p class="text-muted">10/11/2023</p>
-                        <span class="status-badge status-ativo">Ativo</span>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <a href="#" class="btn btn-info btn-sm mt-3">
-                            <i class="fas fa-info-circle"></i> Detalhes
-                        </a>
-                        <div class="mt-2 d-flex justify-content-between align-items-center">
-                            <span class="like-count">Curtidas: <span class="like-counter">0</span></span>
-                            <i class="fas fa-heart like-btn" onclick="likeProject(this)"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <!-- Cards dos projetos vão aqui -->
         </div>
     </div>
 
-    <!-- Scripts -->
     <script>
-        // Função para curtir projeto
-        function likeProject(element) {
-            let likeCounter = element.nextElementSibling.querySelector('.like-counter');
-            let currentLikes = parseInt(likeCounter.innerText);
-            likeCounter.innerText = currentLikes + 1;
+        const projects = [
+            { 
+                title: "Transformando Ideias em Resultados", 
+                date: "2023-05-10", 
+                status: "Ativo", 
+                image: "/static/img/cardproject01.jpg", 
+                progress: 50, 
+                likes: 0 
+            },
+            { 
+                title: "Rumo ao Sucesso", 
+                date: "2023-05-10", 
+                status: "Ativo", 
+                image: "/static/img/cardproject02.jpg", 
+                progress: 50, 
+                likes: 0 
+            },
+            { 
+                title: "Desenvolvimento Inteligente", 
+                date: "2023-06-01", 
+                status: "Ativo", 
+                image: "/static/img/cardproject03.png", 
+                progress: 70, 
+                likes: 0 
+            },
+            { 
+                title: "Conexão e Inovação", 
+                date: "2023-07-20", 
+                status: "Inativo", 
+                image: "/static/img/cardproject04.jpg", 
+                progress: 40, 
+                likes: 0 
+            },
+            { 
+                title: "Tecnologia e Impacto", 
+                date: "2023-08-30", 
+                status: "Ativo", 
+                image: "/static/img/cardproject05.jpg", 
+                progress: 80, 
+                likes: 0 
+            },
+            { 
+                title: "Desenvolvimento Sustentável", 
+                date: "2023-09-15", 
+                status: "Concluído", 
+                image: "/static/img/cardproject06.png", 
+                progress: 100, 
+                likes: 0 
+            },
+            { 
+                title: "Transformação Digital", 
+                date: "2023-10-05", 
+                status: "Em andamento", 
+                image: "/static/img/cardproject07.jpg", 
+                progress: 50, 
+                likes: 0 
+            },
+            { 
+                title: "Novos Desafios", 
+                date: "2023-11-01", 
+                status: "Ativo", 
+                image: "/static/img/cardproject08.jpg", 
+                progress: 20, 
+                likes: 0 
+            }
+        ];
+
+        const filterStatus = document.getElementById("filter-status");
+        const filterDate = document.getElementById("filter-date");
+        const searchInput = document.getElementById("search-input");
+        const projectGrid = document.getElementById("project-grid");
+
+        function renderProjects(filteredProjects) {
+            projectGrid.innerHTML = '';
+            filteredProjects.forEach(project => {
+                const projectCard = `
+                    <div class="col-md-4 mb-4 project-card" data-status="${project.status}" data-date="${project.date}">
+                        <div class="card">
+                            <img src="${project.image}" alt="Projeto" class="project-img">
+                            <div class="card-body">
+                                <h5 class="mt-3">${project.title}</h5>
+                                <p class="text-muted">${project.date}</p>
+                                <span class="status-badge status-${project.status.toLowerCase()}">${project.status}</span>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar" role="progressbar" style="width: ${project.progress}%" aria-valuenow="${project.progress}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <a href="#" class="btn btn-info btn-sm mt-3">
+                                    <i class="fas fa-info-circle"></i> Detalhes
+                                </a>
+                                <div class="mt-2 d-flex justify-content-between align-items-center">
+                                    <span class="like-count">Curtidas: <span class="like-counter">${project.likes}</span></span>
+                                    <i class="fas fa-heart like-btn" onclick="likeProject(this, ${project.likes})"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                projectGrid.innerHTML += projectCard;
+            });
         }
 
-        // Filtros
-        document.getElementById('filter-status').addEventListener('change', function() {
-            let status = this.value;
-            let projects = document.querySelectorAll('.project-card');
-            projects.forEach(function(project) {
-                if (status && project.dataset.status !== status) {
-                    project.style.display = 'none';
-                } else {
-                    project.style.display = 'block';
-                }
-            });
-        });
+        function likeProject(element, likes) {
+            likes++;
+            element.nextElementSibling.innerText = likes;
+        }
 
-        document.getElementById('filter-date').addEventListener('change', function() {
-            let sort = this.value;
-            let projects = Array.from(document.querySelectorAll('.project-card'));
-            if (sort === 'mais-recente') {
-                projects.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
-            } else if (sort === 'mais-antigo') {
-                projects.sort((a, b) => new Date(a.dataset.date) - new Date(b.dataset.date));
-            }
-            let grid = document.getElementById('project-grid');
-            grid.innerHTML = '';
-            projects.forEach(function(project) {
-                grid.appendChild(project);
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const statusFilter = filterStatus.value;
+            const dateFilter = filterDate.value;
+
+            let filteredProjects = projects.filter(project => {
+                let matchesSearch = project.title.toLowerCase().includes(searchTerm);
+                let matchesStatus = statusFilter ? project.status.toLowerCase() === statusFilter.toLowerCase() : true;
+                let matchesDate = true;
+
+                if (dateFilter === "mais-recente") {
+                    matchesDate = new Date(project.date) > new Date('2023-10-01'); // Data arbitrária
+                } else if (dateFilter === "mais-antigo") {
+                    matchesDate = new Date(project.date) < new Date('2023-10-01');
+                }
+
+                return matchesSearch && matchesStatus && matchesDate;
             });
-        });
+
+            renderProjects(filteredProjects);
+        }
+
+        filterStatus.addEventListener("change", applyFilters);
+        filterDate.addEventListener("change", applyFilters);
+        searchInput.addEventListener("input", applyFilters);
+
+        // Renderiza os projetos ao carregar a página
+        renderProjects(projects);
     </script>
-    
-    <!-- Incluir Bootstrap e Font Awesome -->
+
+    <!-- Incluir o script do Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<script>
-    function likeProject(element) {
-        // Encontrar o contador de curtidas relacionado ao card
-        const likeCounter = element.closest('.card-body').querySelector('.like-counter');
-        let currentLikes = parseInt(likeCounter.innerText);
-
-        // Atualizar o contador de curtidas
-        likeCounter.innerText = currentLikes + 1;
-
-        // Adicionar a classe 'liked' para mudar o ícone de coração
-        element.classList.toggle('liked');
-
-        // Alterar o ícone do coração (exemplo: colorir de vermelho quando curtido)
-        if (element.classList.contains('liked')) {
-            element.style.color = 'red'; // Coração vermelho quando curtir
-        } else {
-            element.style.color = ''; // Retornar à cor original quando desfazer curtida
-        }
-    }
-</script>
-
 </html>

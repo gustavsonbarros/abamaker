@@ -281,3 +281,8 @@ h2 {
 .btn-voltar span {
     font-weight: bold;
 }
+/* Estilos para a navbar quando o usuário rolar */
+.navbar.scrolled {
+    background-color: #343a40 !important;
+    transition: background-color 0.3s ease-in-out;
+}

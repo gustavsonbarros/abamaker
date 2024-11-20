@@ -107,11 +107,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Exemplo de listagem -->
                                 {% for arquivo in arquivos %}
                                 <tr>
                                     <td>{{ arquivo.nome }}</td>
-                                    <td>{{ arquivo.data }}</td>
+                                    <td>{{ arquivo.data_envio.strftime('%d/%m/%Y %H:%M:%S') }}</td>
                                     <td>
                                         <a href="{{ url_for('download', filename=arquivo.nome) }}" class="btn btn-success btn-sm">Baixar</a>
                                         <a href="{{ url_for('delete', filename=arquivo.nome) }}" class="btn btn-danger btn-sm">Excluir</a>
@@ -120,36 +119,6 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sessões de Aprendizado -->
-        <div class="row mt-5">
-            <div class="col-md-12">
-                <div class="card shadow-lg">
-                    <div class="card-body">
-                        <h4 class="card-title">Sessões de Aprendizado</h4>
-                        <p>Explore conteúdos educacionais para aprimorar suas habilidades no universo maker:</p>
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <a href="https://www.youtube.com/watch?v=example" target="_blank">Vídeo: Introdução ao Arduino</a>
-                                <span class="badge badge-info ml-2">Vídeo</span>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="https://www.medium.com/article-example" target="_blank">Artigo: Projetos Criativos com Impressão 3D</a>
-                                <span class="badge badge-info ml-2">Artigo</span>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="https://www.example.com/tutorial-maker" target="_blank">Tutorial: Programação Básica para Makers</a>
-                                <span class="badge badge-info ml-2">Tutorial</span>
-                            </li>
-                            <li class="list-group-item">
-                                <a href="https://www.example.com/resource" target="_blank">Recurso: Guia Completo de Robótica Educacional</a>
-                                <span class="badge badge-info ml-2">Recurso</span>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
