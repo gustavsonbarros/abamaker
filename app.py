@@ -159,6 +159,33 @@ def adicionar_instituicao():
     return render_template('adicionar_instituicao.html')
 
 
+@app.route('/adicionar_projeto', methods=['GET', 'POST'])
+def adicionar_projeto():
+    if 'user_id' not in session or session.get('tipo') != 'admin':
+        flash("Acesso negado. Faça login como admin.", "danger")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        nome = request.form['nome']
+        data_submissao = request.form['data_submissao']
+        status = request.form['status']
+
+        # Validação dos campos
+        if not nome or not data_submissao or not status:
+            flash("Todos os campos são obrigatórios!", "danger")
+            return redirect(url_for('adicionar_projeto'))
+
+        # Criar novo projeto
+        novo_projeto = Projeto(nome=nome, data_submissao=data_submissao, status=status)
+        db.session.add(novo_projeto)
+        db.session.commit()
+
+        flash("Projeto adicionado com sucesso!", "success")
+        return redirect(url_for('projetos'))
+
+    return render_template('adicionar_projeto.html')
+
+
 @app.route('/aprovar_projeto/<int:id>', methods=['GET'])
 def aprovar_projeto(id):
     projeto = Projeto.query.get_or_404(id)
