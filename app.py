@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from flask import send_from_directory
 
 # Configuração da aplicação
 app = Flask(__name__)
@@ -244,27 +245,37 @@ def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'gif', 'pdf'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
-# Rota para upload de arquivos
+
+# Lista para armazenar informações de arquivos (substitua por banco de dados no futuro)
+arquivos = []
+
 @app.route('/upload', methods=['POST'])
 def upload():
     if 'file' not in request.files:
         flash('Nenhum arquivo selecionado', 'danger')
-        return redirect(request.url)
+        return redirect(url_for('aluno'))
     
     file = request.files['file']
     
     if file.filename == '':
         flash('Nenhum arquivo selecionado', 'danger')
-        return redirect(request.url)
+        return redirect(url_for('aluno'))
     
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+        # Armazenar informações do arquivo
+        arquivos.append({
+            'nome': filename,
+            'data': datetime.now().strftime('%d/%m/%Y %H:%M')
+        })
+
         flash('Arquivo enviado com sucesso', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('aluno'))
     
     flash('Tipo de arquivo não permitido', 'danger')
-    return redirect(request.url)
+    return redirect(url_for('aluno'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -287,6 +298,24 @@ def login():
         flash("Credenciais inválidas.", "danger")
     return render_template('login.html')
 
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    if 'user_id' not in session or session.get('tipo') != 'aluno':
+        flash("Acesso negado. Faça login como aluno.", "danger")
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    nome = request.form['nome']
+    email = request.form['email']
+
+    aluno = Usuario.query.get_or_404(user_id)
+    aluno.nome = nome
+    aluno.email = email
+
+    db.session.commit()
+    flash("Perfil atualizado com sucesso!", "success")
+    return redirect(url_for('aluno'))
+
 
 @app.route('/logout')
 def logout():
@@ -294,8 +323,7 @@ def logout():
     flash("Você foi desconectado com sucesso.", "info")
     return redirect(url_for('login'))
 
-# Lista para armazenar informações dos arquivos
-arquivos = []
+
 
 @app.route('/alunohtml', methods=['GET', 'POST'])
 def alunohtml():
@@ -330,23 +358,64 @@ def aluno():
     if 'user_id' not in session or session.get('tipo') != 'aluno':
         flash("Acesso negado. Faça login como aluno.", "danger")
         return redirect(url_for('login'))
-    return render_template('aluno.html')
+    
+    user_id = session['user_id']
+    aluno = Usuario.query.get_or_404(user_id)
+    
+    # Renderiza a lista de arquivos no template
+    return render_template('aluno.html', aluno=aluno, arquivos=arquivos)
 
-@app.route('/projeto/<int:id>')
+
+
+@app.route('/projeto/<int:id>', methods=['GET'])
 def detalhes_projeto(id):
-    projeto = Projeto.query.get(id)  # Aqui você pega o projeto com o ID
+    projeto = Projeto.query.get_or_404(id)
     return render_template('detalhes_projeto.html', projeto=projeto)
 
-@app.route('/detalhes_projeto/<int:id>', methods=['GET'])
+# API para retorno de detalhes do projeto em formato JSON
+@app.route('/api/projeto/<int:id>', methods=['GET'])
 def api_detalhes_projeto(id):
     projeto = Projeto.query.get_or_404(id)
     return {
         'id': projeto.id,
         'nome': projeto.nome,
         'data_submissao': projeto.data_submissao,
-        'status': projeto.status,
-        'descricao': "Descrição detalhada do projeto"  
+        'status': projeto.status
     }
+
+
+
+@app.route('/download/<filename>', methods=['GET'])
+def download(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+
+
+@app.route('/delete/<filename>', methods=['POST'])
+def delete(filename):
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        # Remove da lista
+        global arquivos
+        arquivos = [arquivo for arquivo in arquivos if arquivo['nome'] != filename]
+        flash(f"Arquivo '{filename}' excluído com sucesso.", 'success')
+    else:
+        flash(f"Arquivo '{filename}' não encontrado.", 'danger')
+    return redirect(url_for('aluno'))
+
+@app.route('/api/projetos/stats', methods=['GET'])
+def projetos_stats():
+    if 'user_id' not in session or session.get('tipo') != 'aluno':
+        return {'error': 'Unauthorized'}, 401
+
+    stats = {
+        'Concluídos': Projeto.query.filter_by(status='Concluído').count(),
+        'Em andamento': Projeto.query.filter_by(status='Em andamento').count(),
+        'Aguardando revisão': Projeto.query.filter_by(status='Aguardando revisão').count()
+    }
+    return stats
+
+
 
 
 
