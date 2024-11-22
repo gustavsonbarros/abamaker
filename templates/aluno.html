@@ -12,9 +12,26 @@
             font-weight: bold;
             border-bottom: 2px solid #007bff;
             padding-bottom: 0.5rem;
+            margin-top: 0; /* Sem margem no topo */
         }
         .card-shadow {
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Remover completamente o espaço superior do conteúdo */
+        body, html {
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 0; /* Remove qualquer margem do topo */
+            padding-top: 0; /* Remove qualquer padding do topo */
+        }
+        /* Ajuste as margens das seções para deixar mais compacto */
+        section {
+            margin-top: 10px; /* Menor margem para seções */
+        }
+        .navbar {
+            margin-bottom: 0; /* Remove a margem inferior da navbar */
         }
     </style>
 </head>
@@ -38,7 +55,7 @@
     </nav>
 
     <!-- Conteúdo Principal -->
-    <div class="container my-5">
+    <div class="container my-0"> <!-- Removemos qualquer margem ou padding do container -->
         <!-- Boas-vindas e Perfil -->
         <div class="row g-4 mb-4">
             <div class="col-lg-4 col-md-6">
@@ -53,7 +70,7 @@
         </div>
 
         <!-- Projetos -->
-        <section id="projetos" class="mb-5">
+        <section id="projetos" class="mb-4">
             <h3 class="section-title">Meus Projetos</h3>
             <div class="list-group">
                 {% for projeto in projetos %}
@@ -66,7 +83,7 @@
         </section>
 
         <!-- Upload e Arquivos -->
-        <section id="arquivos" class="mb-5">
+        <section id="arquivos" class="mb-4">
             <h3 class="section-title">Gerenciar Arquivos</h3>
             <div class="row g-4">
                 <!-- Formulário de Upload -->
