@@ -103,9 +103,24 @@ def admin_panel():
     if 'user_id' not in session or session.get('tipo') != 'admin':
         flash("Acesso negado. Faça login como admin.", "danger")
         return redirect(url_for('login'))
+    
     projetos = Projeto.query.all()
     instituicoes = Instituicao.query.all()
-    return render_template('admin_panel.html', projetos=projetos, instituicoes=instituicoes)
+    
+    # Resumo de projetos
+    projetos_pendentes = Projeto.query.filter_by(status='Pendente').count()
+    projetos_aprovados = Projeto.query.filter_by(status='Aprovado').count()
+    projetos_rejeitados = Projeto.query.filter_by(status='Rejeitado').count()
+
+    return render_template(
+        'admin_panel.html',
+        projetos=projetos,
+        instituicoes=instituicoes,
+        projetos_pendentes=projetos_pendentes,
+        projetos_aprovados=projetos_aprovados,
+        projetos_rejeitados=projetos_rejeitados
+    )
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -252,30 +267,31 @@ arquivos = []
 @app.route('/upload', methods=['POST'])
 def upload():
     if 'file' not in request.files:
-        flash('Nenhum arquivo selecionado', 'danger')
+        flash('Nenhum arquivo selecionado.', 'danger')
         return redirect(url_for('aluno'))
-    
+
     file = request.files['file']
-    
+
     if file.filename == '':
-        flash('Nenhum arquivo selecionado', 'danger')
+        flash('Nenhum arquivo selecionado.', 'danger')
         return redirect(url_for('aluno'))
-    
+
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        
+
         # Armazenar informações do arquivo
         arquivos.append({
             'nome': filename,
             'data': datetime.now().strftime('%d/%m/%Y %H:%M')
         })
 
-        flash('Arquivo enviado com sucesso', 'success')
+        flash('Arquivo enviado com sucesso!', 'success')
         return redirect(url_for('aluno'))
-    
-    flash('Tipo de arquivo não permitido', 'danger')
+
+    flash('Tipo de arquivo não permitido.', 'danger')
     return redirect(url_for('aluno'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -305,13 +321,25 @@ def update_profile():
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    nome = request.form['nome']
-    email = request.form['email']
-
     aluno = Usuario.query.get_or_404(user_id)
-    aluno.nome = nome
-    aluno.email = email
+    
+    # Atualiza nome e email
+    aluno.nome = request.form['nome']
+    aluno.email = request.form['email']
 
+    # Verifica se a foto foi enviada
+    if 'foto_perfil' in request.files:
+        file = request.files['foto_perfil']
+        if file and allowed_file(file.filename):
+            # Garante que o nome do arquivo seja seguro
+            filename = secure_filename(file.filename)
+            
+            # Salva o arquivo no diretório de uploads
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            
+            # Atualiza o campo foto_perfil no banco de dados
+            aluno.foto_perfil = filename
+    
     db.session.commit()
     flash("Perfil atualizado com sucesso!", "success")
     return redirect(url_for('aluno'))
@@ -362,8 +390,21 @@ def aluno():
     user_id = session['user_id']
     aluno = Usuario.query.get_or_404(user_id)
     
-    # Renderiza a lista de arquivos no template
-    return render_template('aluno.html', aluno=aluno, arquivos=arquivos)
+    # Contar projetos por status
+    projetos_pendentes = Projeto.query.filter_by(status='Pendente').count()
+    projetos_aprovados = Projeto.query.filter_by(status='Aprovado').count()
+    projetos_rejeitados = Projeto.query.filter_by(status='Rejeitado').count()
+    
+    # Renderizar a lista de arquivos e resumo dos projetos no template
+    return render_template(
+        'aluno.html',
+        aluno=aluno,
+        arquivos=arquivos,
+        projetos_pendentes=projetos_pendentes,
+        projetos_aprovados=projetos_aprovados,
+        projetos_rejeitados=projetos_rejeitados
+    )
+
 
 
 
@@ -395,13 +436,14 @@ def delete(filename):
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if os.path.exists(file_path):
         os.remove(file_path)
-        # Remove da lista
+        
         global arquivos
         arquivos = [arquivo for arquivo in arquivos if arquivo['nome'] != filename]
         flash(f"Arquivo '{filename}' excluído com sucesso.", 'success')
     else:
         flash(f"Arquivo '{filename}' não encontrado.", 'danger')
     return redirect(url_for('aluno'))
+
 
 @app.route('/api/projetos/stats', methods=['GET'])
 def projetos_stats():
@@ -414,12 +456,6 @@ def projetos_stats():
         'Aguardando revisão': Projeto.query.filter_by(status='Aguardando revisão').count()
     }
     return stats
-
-
-
-
-
-
 
 # Inicializar tabelas
 with app.app_context():

@@ -12,26 +12,29 @@
             font-weight: bold;
             border-bottom: 2px solid #007bff;
             padding-bottom: 0.5rem;
-            margin-top: 0; /* Sem margem no topo */
+            margin-top: 0;
         }
         .card-shadow {
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
-        /* Remover completamente o espaço superior do conteúdo */
         body, html {
             margin: 0;
             padding: 0;
         }
         .container {
-            margin-top: 0; /* Remove qualquer margem do topo */
-            padding-top: 0; /* Remove qualquer padding do topo */
+            margin-top: 0;
+            padding-top: 0;
         }
-        /* Ajuste as margens das seções para deixar mais compacto */
         section {
-            margin-top: 10px; /* Menor margem para seções */
+            margin-top: 10px;
         }
         .navbar {
-            margin-bottom: 0; /* Remove a margem inferior da navbar */
+            margin-bottom: 0;
+        }
+        .img-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -55,7 +58,7 @@
     </nav>
 
     <!-- Conteúdo Principal -->
-    <div class="container my-0"> <!-- Removemos qualquer margem ou padding do container -->
+    <div class="container my-0">
         <!-- Boas-vindas e Perfil -->
         <div class="row g-4 mb-4">
             <div class="col-lg-4 col-md-6">
@@ -63,6 +66,14 @@
                     <div class="card-body text-center">
                         <h5 class="card-title">Bem-vindo(a), {{ aluno.nome }}</h5>
                         <p class="text-muted">Email: {{ aluno.email }}</p>
+                        
+                        <!-- Exibição da foto de perfil -->
+                        {% if aluno.foto_perfil %}
+                            <img src="{{ url_for('static', filename='uploads/' + aluno.foto_perfil) }}" alt="Foto de Perfil" class="img-thumbnail">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='uploads/default-avatar.png') }}" alt="Foto de Perfil" class="img-thumbnail">
+                        {% endif %}
+                        
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar Perfil</button>
                     </div>
                 </div>
@@ -72,6 +83,25 @@
         <!-- Projetos -->
         <section id="projetos" class="mb-4">
             <h3 class="section-title">Meus Projetos</h3>
+            <!-- Resumo dos Projetos -->
+            <div class="mb-4">
+                <div class="card card-shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">Resumo dos Projetos</h5>
+                        <div class="d-flex justify-content-around">
+                            <div>
+                                <span class="badge bg-warning">Pendentes: {{ projetos_pendentes }}</span>
+                            </div>
+                            <div>
+                                <span class="badge bg-success">Aprovados: {{ projetos_aprovados }}</span>
+                            </div>
+                            <div>
+                                <span class="badge bg-danger">Rejeitados: {{ projetos_rejeitados }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="list-group">
                 {% for projeto in projetos %}
                 <a href="{{ url_for('detalhes_projeto', id=projeto.id) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
@@ -86,7 +116,6 @@
         <section id="arquivos" class="mb-4">
             <h3 class="section-title">Gerenciar Arquivos</h3>
             <div class="row g-4">
-                <!-- Formulário de Upload -->
                 <div class="col-lg-6 col-md-12">
                     <div class="card card-shadow">
                         <div class="card-body">
@@ -144,23 +173,53 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ url_for('update_profile') }}">
+                    <form method="POST" action="{{ url_for('update_profile') }}" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome</label>
-                            <input type="text" name="nome" id="nome" class="form-control" value="{{ aluno.nome }}">
+                            <input type="text" name="nome" id="nome" class="form-control" value="{{ aluno.nome }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" id="email" class="form-control" value="{{ aluno.email }}">
+                            <input type="email" name="email" id="email" class="form-control" value="{{ aluno.email }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="senha_atual" class="form-label">Senha Atual</label>
+                            <input type="password" name="senha_atual" id="senha_atual" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nova_senha" class="form-label">Nova Senha</label>
+                            <input type="password" name="nova_senha" id="nova_senha" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmar_senha" class="form-label">Confirmar Nova Senha</label>
+                            <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="foto_perfil" class="form-label">Foto de Perfil</label>
+                            <input type="file" name="foto_perfil" id="foto_perfil" class="form-control" accept="image/*">
                         </div>
                         <button type="submit" class="btn btn-primary btn-sm w-100">Salvar</button>
+                        <button type="button" class="btn btn-secondary btn-sm w-100" data-bs-dismiss="modal">Cancelar</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Toast de Notificação -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="feedbackToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="toast-header">
+                <strong class="me-auto">Notificação</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Fechar"></button>
+            </div>
+            <div class="toast-body">
+                <!-- Mensagem será inserida dinamicamente -->
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+</body> 
 </html>
